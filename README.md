@@ -1,34 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Execute
 
-## Getting Started
+An editor that allows you to quickly bring your ideas to life right in your browser.
 
-First, run the development server:
+**Note:** This project is currently in alpha stage.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Goal
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The goal of this project is quite simple. _Execute_ allows you to quickly scaffold a vanilla html, css, js or React project with Tailwind CSS preconfigured in a single click. I'm aware of some of the alternatives out there. But here's the thing: they're slow. Slow as hell. One of the main goals of this editor is to be as fast as your computer allows.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+If you're one of those wizards who wants to use Vim keys everywhere. Well, I've got you covered.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Got stuck? You'll be able to start a pair programming session with your friend with a single click.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Oh no!! You accidentally closed the browser window? Or your computer crashed because you use Windows? (Working on updates 69%. Don't turn off your computer). No worries, _Execute_ will be smart enough to keep a backup of you code in you local machine.
 
-## Learn More
+Done implementing your ideas. You'll be able to export your app with all of the necessary files so you can continue working on it locally.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+It's big undertaking I know. If you're skillful enough to make a contribution, feel free. Any contribution from docs to code to bug reports is appreciated.
