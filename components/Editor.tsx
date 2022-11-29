@@ -14,8 +14,8 @@ type ActiveEditor = "html" | "css" | "js";
 
 export default function ({ iframeRef }: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
-  const [htmlCode, setHtmlCode] = useState("");
-  const [cssCode, setCssCode] = useState("");
+  const [htmlCode, setHtmlCode] = useState(htmlDefault);
+  const [cssCode, setCssCode] = useState(cssDefault);
   const [jsCode, setJsCode] = useState("");
 
   useEffect(() => {
@@ -93,7 +93,33 @@ export default function ({ iframeRef }: Props) {
           theme={dracula}
         />
       </section>
-      <button className="w-2 flex-shrink-0 cursor-ew-resize bg-blue-100"></button>
+      <button className="w-1.5 flex-shrink-0 cursor-ew-resize bg-cyan-500"></button>
     </div>
   );
 }
+
+const htmlDefault = `<div>
+  <span>Thanks for using Execute.</span>
+</div>
+`;
+const cssDefault = `* {
+  margin: 0;
+}
+
+div {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+span {
+  font-size: 48px;
+  font-weight: bold;
+  font-family: monospace;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(to right, #ec4899, #8b5cf6);
+}
+`;
