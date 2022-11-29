@@ -17,7 +17,7 @@ export default function Home() {
       </Head>
       <main className="md:flex">
         <Editor iframeRef={iframeRef} />
-        <iframe className="w-1/2 bg-red-500" ref={iframeRef}></iframe>
+        <iframe className="w-1/2" ref={iframeRef}></iframe>
       </main>
     </div>
   );
