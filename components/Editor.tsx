@@ -26,7 +26,7 @@ export default function ({ iframeRef }: Props) {
 
   return (
     <div className="flex w-1/2 bg-zinc-900">
-      <section className="flex h-screen flex-grow flex-col">
+      <section className="flex h-screen flex-grow flex-col overflow-hidden">
         <div className="py-2 px-1">
           <Logo />
         </div>
@@ -81,7 +81,7 @@ export default function ({ iframeRef }: Props) {
           theme={dracula}
         />
       </section>
-      <button className="w-2 cursor-ew-resize bg-blue-100"></button>
+      <button className="w-2 flex-shrink-0 cursor-ew-resize bg-blue-100"></button>
     </div>
   );
 }
