@@ -1,18 +1,9 @@
-import { html } from "@codemirror/lang-html";
-import { javascript } from "@codemirror/lang-javascript";
-import ReactCodeMirror from "@uiw/react-codemirror";
 import Head from "next/head";
 import { useRef } from "react";
+import Editor from "../components/Editor";
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  function onChange(value: string) {
-    // console.log({ value });
-    if(iframeRef.current?.contentDocument) {
-      iframeRef.current.contentDocument.body.innerHTML= value
-    }
-  }
 
   return (
     <div>
@@ -24,16 +15,10 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1 className="text-red-500">Hello World</h1>
-        <ReactCodeMirror
-          value="console.log('hello world');"
-          height="200px"
-          onChange={onChange}
-          extensions={[html()]}
-        />
+      <main className="md:flex">
+        <Editor iframeRef={iframeRef} />
+        <iframe className="w-1/2 bg-red-500" ref={iframeRef}></iframe>
       </main>
-      <iframe ref={iframeRef}></iframe>
     </div>
   );
 }
