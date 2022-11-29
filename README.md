@@ -12,7 +12,7 @@ If you're one of those wizards who wants to use Vim keys everywhere. Well, I've 
 
 Got stuck? You'll be able to start a pair programming session with your friend with a single click.
 
-Oh no!! You accidentally closed the browser window? Or your computer crashed because you use Windows? (Working on updates 69%. Don't turn off your computer). No worries, _Execute_ will be smart enough to keep a backup of you code in you local machine.
+Oh no!! You accidentally closed the browser window? Or your computer crashed because you use Windows? (Your pc ran into a problem :frowning_face: ...). No worries, _Execute_ will be smart enough to keep a backup of you code in you local machine.
 
 Done implementing your ideas. You'll be able to export your app with all of the necessary files so you can continue working on it locally.
 
