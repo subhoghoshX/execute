@@ -9,8 +9,10 @@ interface Props {
   iframeRef: MutableRefObject<HTMLIFrameElement | null>;
 }
 
+type ActiveEditor = "html" | "css" | "js";
+
 export default function ({ iframeRef }: Props) {
-  const [currentLang, setCurrentLang] = useState(0);
+  const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
   const [jsCode, setJsCode] = useState("");
@@ -25,13 +27,13 @@ export default function ({ iframeRef }: Props) {
     <section className="w-1/2 bg-zinc-900">
       <Logo />
       <menu>
-        <button className="text-white" onClick={() => setCurrentLang(0)}>
+        <button className="text-white" onClick={() => setActiveEditor("html")}>
           HTML
         </button>
-        <button className="text-white" onClick={() => setCurrentLang(1)}>
+        <button className="text-white" onClick={() => setActiveEditor("css")}>
           CSS
         </button>
-        <button className="text-white" onClick={() => setCurrentLang(2)}>
+        <button className="text-white" onClick={() => setActiveEditor("js")}>
           JavaScript
         </button>
       </menu>
@@ -40,18 +42,21 @@ export default function ({ iframeRef }: Props) {
         height="200px"
         onChange={(value) => setHtmlCode(value)}
         extensions={[html()]}
+        className={activeEditor == "html" ? "" : "hidden"}
       />
       <ReactCodeMirror
         value={cssCode}
         height="200px"
         onChange={(value) => setCssCode(value)}
         extensions={[css()]}
+        className={activeEditor == "css" ? "" : "hidden"}
       />
       <ReactCodeMirror
         value={jsCode}
         height="200px"
         onChange={(value) => setJsCode(value)}
         extensions={[javascript()]}
+        className={activeEditor == "js" ? "" : "hidden"}
       />
     </section>
   );
