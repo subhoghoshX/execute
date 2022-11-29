@@ -421,6 +421,22 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
+"@uiw/codemirror-theme-dracula@^4.15.1":
+  version "4.15.1"
+  resolved "https://r.cnpmjs.org/@uiw/codemirror-theme-dracula/-/codemirror-theme-dracula-4.15.1.tgz#568b6426db1da4e9ef848c72d4189288e7f0034c"
+  integrity sha512-Qs4H5Uva5Z0EuX2NHl8soZEaQU0P5E2WBvGHl3jSwQA3LofrpFcL7x46V/cu8il0lmc977TD5A0M2xYKv8yvtg==
+  dependencies:
+    "@uiw/codemirror-themes" "4.15.1"
+
+"@uiw/codemirror-themes@4.15.1":
+  version "4.15.1"
+  resolved "https://r.cnpmjs.org/@uiw/codemirror-themes/-/codemirror-themes-4.15.1.tgz#5f660816ddf5389c2e0ec13644856a12bdbd14ad"
+  integrity sha512-+3NKdmptuZTGE56LQ3j8daOAKer2STEDklkJS9AGHAGoN1o7IdA+s2Pbp3hf5oGxukNb29UA+gskfb5grszWMg==
+  dependencies:
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.0.0"
+
 "@uiw/react-codemirror@^4.15.1":
   version "4.15.1"
   resolved "https://r.cnpmjs.org/@uiw/react-codemirror/-/react-codemirror-4.15.1.tgz#bc18e7d6016407249f4e055d070c7f3433471b61"

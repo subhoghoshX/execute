@@ -4,6 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { MutableRefObject, useEffect, useState } from "react";
 import { css } from "@codemirror/lang-css";
+import { dracula } from "@uiw/codemirror-theme-dracula";
 
 interface Props {
   iframeRef: MutableRefObject<HTMLIFrameElement | null>;
@@ -26,20 +27,26 @@ export default function ({ iframeRef }: Props) {
   return (
     <div className="flex w-1/2 bg-zinc-900">
       <section className="flex h-screen flex-grow flex-col">
-        <div>
+        <div className="py-2 px-1">
           <Logo />
         </div>
-        <menu>
+        <menu className="space-x-px">
           <button
-            className="text-white"
+            className={"bg-zinc-700 px-3 py-1 text-white"}
             onClick={() => setActiveEditor("html")}
           >
             HTML
           </button>
-          <button className="text-white" onClick={() => setActiveEditor("css")}>
+          <button
+            className={"bg-zinc-700 px-3 py-1 text-white"}
+            onClick={() => setActiveEditor("css")}
+          >
             CSS
           </button>
-          <button className="text-white" onClick={() => setActiveEditor("js")}>
+          <button
+            className={"bg-zinc-700 px-3 py-1 text-white"}
+            onClick={() => setActiveEditor("js")}
+          >
             JavaScript
           </button>
         </menu>
@@ -51,6 +58,7 @@ export default function ({ iframeRef }: Props) {
           className={`flex-grow overflow-hidden ${
             activeEditor == "html" ? "" : "hidden"
           }`}
+          theme={dracula}
         />
         <ReactCodeMirror
           value={cssCode}
@@ -60,6 +68,7 @@ export default function ({ iframeRef }: Props) {
           className={`flex-grow overflow-hidden ${
             activeEditor == "css" ? "" : "hidden"
           }`}
+          theme={dracula}
         />
         <ReactCodeMirror
           value={jsCode}
@@ -69,6 +78,7 @@ export default function ({ iframeRef }: Props) {
           className={`flex-grow overflow-hidden ${
             activeEditor == "js" ? "" : "hidden"
           }`}
+          theme={dracula}
         />
       </section>
       <button className="w-2 cursor-ew-resize bg-blue-100"></button>
