@@ -32,19 +32,31 @@ export default function ({ iframeRef }: Props) {
         </div>
         <menu className="space-x-px">
           <button
-            className={"bg-zinc-700 px-3 py-1 text-white"}
+            className={`border-t px-5 py-1 text-white ${
+              activeEditor == "html"
+                ? "border-cyan-400 bg-[#282a36]"
+                : "border-transparent bg-[#383a46]"
+            }`}
             onClick={() => setActiveEditor("html")}
           >
             HTML
           </button>
           <button
-            className={"bg-zinc-700 px-3 py-1 text-white"}
+            className={`border-t px-5 py-1 text-white ${
+              activeEditor == "css"
+                ? "border-cyan-400 bg-[#282a36]"
+                : "border-transparent bg-[#383a46]"
+            }`}
             onClick={() => setActiveEditor("css")}
           >
             CSS
           </button>
           <button
-            className={"bg-zinc-700 px-3 py-1 text-white"}
+            className={`border-t px-5 py-1 text-white ${
+              activeEditor == "js"
+                ? "border-cyan-400 bg-[#282a36]"
+                : "border-transparent bg-[#383a46]"
+            }`}
             onClick={() => setActiveEditor("js")}
           >
             JavaScript
