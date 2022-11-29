@@ -24,48 +24,54 @@ export default function ({ iframeRef }: Props) {
   }, [htmlCode, cssCode, jsCode]);
 
   return (
-    <section className="flex h-screen w-1/2 flex-col bg-zinc-900">
-      <div>
-        <Logo />
-      </div>
-      <menu>
-        <button className="text-white" onClick={() => setActiveEditor("html")}>
-          HTML
-        </button>
-        <button className="text-white" onClick={() => setActiveEditor("css")}>
-          CSS
-        </button>
-        <button className="text-white" onClick={() => setActiveEditor("js")}>
-          JavaScript
-        </button>
-      </menu>
-      <ReactCodeMirror
-        value={htmlCode}
-        height="200px"
-        onChange={(value) => setHtmlCode(value)}
-        extensions={[html()]}
-        className={`flex-grow overflow-hidden ${
-          activeEditor == "html" ? "" : "hidden"
-        }`}
-      />
-      <ReactCodeMirror
-        value={cssCode}
-        height="200px"
-        onChange={(value) => setCssCode(value)}
-        extensions={[css()]}
-        className={`flex-grow overflow-hidden ${
-          activeEditor == "css" ? "" : "hidden"
-        }`}
-      />
-      <ReactCodeMirror
-        value={jsCode}
-        height="200px"
-        onChange={(value) => setJsCode(value)}
-        extensions={[javascript()]}
-        className={`flex-grow overflow-hidden ${
-          activeEditor == "js" ? "" : "hidden"
-        }`}
-      />
-    </section>
+    <div className="flex w-1/2 bg-zinc-900">
+      <section className="flex h-screen flex-grow flex-col">
+        <div>
+          <Logo />
+        </div>
+        <menu>
+          <button
+            className="text-white"
+            onClick={() => setActiveEditor("html")}
+          >
+            HTML
+          </button>
+          <button className="text-white" onClick={() => setActiveEditor("css")}>
+            CSS
+          </button>
+          <button className="text-white" onClick={() => setActiveEditor("js")}>
+            JavaScript
+          </button>
+        </menu>
+        <ReactCodeMirror
+          value={htmlCode}
+          height="200px"
+          onChange={(value) => setHtmlCode(value)}
+          extensions={[html()]}
+          className={`flex-grow overflow-hidden ${
+            activeEditor == "html" ? "" : "hidden"
+          }`}
+        />
+        <ReactCodeMirror
+          value={cssCode}
+          height="200px"
+          onChange={(value) => setCssCode(value)}
+          extensions={[css()]}
+          className={`flex-grow overflow-hidden ${
+            activeEditor == "css" ? "" : "hidden"
+          }`}
+        />
+        <ReactCodeMirror
+          value={jsCode}
+          height="200px"
+          onChange={(value) => setJsCode(value)}
+          extensions={[javascript()]}
+          className={`flex-grow overflow-hidden ${
+            activeEditor == "js" ? "" : "hidden"
+          }`}
+        />
+      </section>
+      <button className="w-2 cursor-ew-resize bg-blue-100"></button>
+    </div>
   );
 }
