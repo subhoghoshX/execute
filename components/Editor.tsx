@@ -40,10 +40,10 @@ export default function ({ iframeRef, setShowOverlay }: Props) {
 
   function mouseMoveHandler(e: MouseEvent) {
     setResize((resize) => {
-      if (resize >= 400) {
+      if (resize >= 6) {
         return resize + e.movementX;
       } else {
-        return 400;
+        return 6;
       }
     });
   }
@@ -60,13 +60,13 @@ export default function ({ iframeRef, setShowOverlay }: Props) {
   return (
     <div
       className="flex w-1/2 bg-zinc-900"
-      style={{ width: resize ? `${resize}px` : "50%", minWidth: "400px" }}
+      style={{ width: resize ? `${resize}px` : "50%", minWidth: "6px" }}
     >
       <section className="flex h-screen flex-grow flex-col overflow-hidden">
         <div className="py-2 px-1">
           <Logo />
         </div>
-        <menu className="space-x-px">
+        <menu className="space-x-px whitespace-nowrap">
           <button
             className={`border-t px-5 py-1 text-white ${
               activeEditor == "html"
