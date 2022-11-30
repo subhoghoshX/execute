@@ -2,21 +2,29 @@ import Logo from "../components/Logo";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { MutableRefObject, useEffect, useState } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { css } from "@codemirror/lang-css";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 
 interface Props {
   iframeRef: MutableRefObject<HTMLIFrameElement | null>;
+  setShowOverlay: Dispatch<SetStateAction<boolean>>;
 }
 
 type ActiveEditor = "html" | "css" | "js";
 
-export default function ({ iframeRef }: Props) {
+export default function ({ iframeRef, setShowOverlay }: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
   const [htmlCode, setHtmlCode] = useState(htmlDefault);
   const [cssCode, setCssCode] = useState(cssDefault);
   const [jsCode, setJsCode] = useState("");
+  const [resize, setResize] = useState(0);
 
   useEffect(() => {
     if (iframeRef.current?.contentDocument) {
@@ -24,8 +32,36 @@ export default function ({ iframeRef }: Props) {
     }
   }, [htmlCode, cssCode, jsCode]);
 
+  function mouseDownHandler() {
+    document.addEventListener("mousemove", mouseMoveHandler);
+    document.addEventListener("mouseup", mouseUpHandler);
+    setShowOverlay(true);
+  }
+
+  function mouseMoveHandler(e: MouseEvent) {
+    setResize((resize) => {
+      if (resize >= 400) {
+        return resize + e.movementX;
+      } else {
+        return 400;
+      }
+    });
+  }
+
+  function mouseUpHandler() {
+    document.removeEventListener("mousemove", mouseMoveHandler);
+    setShowOverlay(false);
+  }
+
+  useEffect(() => {
+    setResize(window.innerWidth / 2);
+  }, []);
+
   return (
-    <div className="flex w-1/2 bg-zinc-900">
+    <div
+      className="flex w-1/2 bg-zinc-900"
+      style={{ width: resize ? `${resize}px` : "50%", minWidth: "400px" }}
+    >
       <section className="flex h-screen flex-grow flex-col overflow-hidden">
         <div className="py-2 px-1">
           <Logo />
@@ -93,7 +129,10 @@ export default function ({ iframeRef }: Props) {
           theme={dracula}
         />
       </section>
-      <button className="w-1.5 flex-shrink-0 cursor-ew-resize bg-cyan-500"></button>
+      <button
+        className="w-1.5 flex-shrink-0 cursor-ew-resize bg-cyan-500"
+        onMouseDown={mouseDownHandler}
+      ></button>
     </div>
   );
 }

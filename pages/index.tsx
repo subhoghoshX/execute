@@ -1,9 +1,10 @@
 import Head from "next/head";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Editor from "../components/Editor";
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [showOverlay, setShowOverlay] = useState(false);
 
   return (
     <div>
@@ -16,8 +17,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="md:flex">
-        <Editor iframeRef={iframeRef} />
-        <iframe className="w-1/2" ref={iframeRef}></iframe>
+        <Editor iframeRef={iframeRef} setShowOverlay={setShowOverlay} />
+        <section className="relative flex-grow">
+          {showOverlay && <span className="absolute inset-0"></span>}
+          <iframe className="h-full w-full" ref={iframeRef}></iframe>
+        </section>
       </main>
     </div>
   );
