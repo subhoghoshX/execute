@@ -6,7 +6,7 @@ An editor that allows you to quickly bring your ideas to life right in your brow
 
 ## Goal
 
-The goal of this project is quite simple. _Execute_ allows you to quickly scaffold a vanilla html, css, js or React project with Tailwind CSS preconfigured in a single click. I'm aware of some of the alternatives out there. But here's the thing: they're slow. Slow as hell. One of the main goals of this editor is to be as fast as your computer allows.
+The goal of this project is quite simple. _Execute_ allows you to quickly scaffold a vanilla html, css, js or React project with Tailwind CSS preconfigured in a single click. One of the main goals of this editor is to be as fast as your computer allows.
 
 If you're one of those wizards who wants to use Vim keys everywhere. Well, I've got you covered.
 
