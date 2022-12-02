@@ -15,16 +15,22 @@ import { dracula } from "@uiw/codemirror-theme-dracula";
 interface Props {
   iframeRef: MutableRefObject<HTMLIFrameElement | null>;
   setShowOverlay: Dispatch<SetStateAction<boolean>>;
+  resize: number;
+  setResize: Dispatch<SetStateAction<number>>;
 }
 
 type ActiveEditor = "html" | "css" | "js";
 
-export default function ({ iframeRef, setShowOverlay }: Props) {
+export default function ({
+  iframeRef,
+  setShowOverlay,
+  resize,
+  setResize,
+}: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
   const [htmlCode, setHtmlCode] = useState(htmlDefault);
   const [cssCode, setCssCode] = useState(cssDefault);
   const [jsCode, setJsCode] = useState("");
-  const [resize, setResize] = useState(0);
 
   useEffect(() => {
     if (iframeRef.current?.contentDocument) {
@@ -40,8 +46,10 @@ export default function ({ iframeRef, setShowOverlay }: Props) {
 
   function mouseMoveHandler(e: MouseEvent) {
     setResize((resize) => {
-      if (resize >= 6) {
+      if (resize >= 6 && resize <= window.innerWidth - 240) {
         return resize + e.movementX;
+      } else if (resize > window.innerWidth / 2) {
+        return window.innerWidth - 240;
       } else {
         return 6;
       }
