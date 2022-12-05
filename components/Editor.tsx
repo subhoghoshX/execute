@@ -153,6 +153,10 @@ const cssDefault = `* {
   margin: 0;
 }
 
+html, body {
+  height: 100%
+}
+
 div {
   height: 100%;
   display: flex;
