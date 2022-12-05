@@ -34,7 +34,7 @@ export default function ({
 
   useEffect(() => {
     if (iframeRef.current?.contentDocument) {
-      iframeRef.current.contentDocument.body.innerHTML = `${htmlCode}<style>${cssCode}</style><script>${jsCode}</script>`;
+      iframeRef.current.srcdoc = `${htmlCode}<style>${cssCode}</style><script>${jsCode}</script>`;
     }
   }, [htmlCode, cssCode, jsCode]);
 
