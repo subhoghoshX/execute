@@ -10,7 +10,8 @@
     "format:check": "prettier . --check",
     "format:fix": "prettier . --write --ignore-unknown",
     "server:dev": "nodemon server.js",
-    "server:start": "node server.js"
+    "server:start": "node server.js",
+    "server:prod": "next build && npm run server:start"
   },
   "dependencies": {
     "@codemirror/collab": "^6.0.0",
