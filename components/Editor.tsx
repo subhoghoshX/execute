@@ -11,6 +11,9 @@ import {
 } from "react";
 import { css } from "@codemirror/lang-css";
 import { dracula } from "@uiw/codemirror-theme-dracula";
+import { getDocument, peerExtension } from "../utils/peerExtension";
+import io from "socket.io-client";
+export const socket = io();
 
 interface Props {
   iframeRef: MutableRefObject<HTMLIFrameElement | null>;
@@ -28,9 +31,26 @@ export default function ({
   setResize,
 }: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
-  const [htmlCode, setHtmlCode] = useState(htmlDefault);
+  const [htmlCode, setHtmlCode] = useState<string | null>(null);
   const [cssCode, setCssCode] = useState(cssDefault);
   const [jsCode, setJsCode] = useState("");
+  const [version, setVersion] = useState<number | null>(null);
+
+  useEffect(() => {
+    console.log("huaaaaaaaaaaaaaaaa");
+    getDocument().then(({ version, doc }) => {
+      setHtmlCode(doc.toString());
+      setVersion(version);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("pullUpdateResponse");
+      socket.off("pushUpdateResponse");
+      socket.off("getDocumentResponse");
+    };
+  }, []);
 
   useEffect(() => {
     if (iframeRef.current?.contentDocument) {
@@ -106,16 +126,20 @@ export default function ({
             JavaScript
           </button>
         </menu>
-        <ReactCodeMirror
-          value={htmlCode}
-          height="200px"
-          onChange={(value) => setHtmlCode(value)}
-          extensions={[html()]}
-          className={`flex-grow overflow-hidden ${
-            activeEditor == "html" ? "" : "hidden"
-          }`}
-          theme={dracula}
-        />
+        {htmlCode !== null && version !== null && (
+          <ReactCodeMirror
+            value={htmlCode}
+            height="200px"
+            onChange={(value) => {
+              console.log(value);
+            }}
+            extensions={[peerExtension(version), html()]}
+            className={`flex-grow overflow-hidden ${
+              activeEditor == "html" ? "" : "hidden"
+            }`}
+            theme={dracula}
+          />
+        )}
         <ReactCodeMirror
           value={cssCode}
           height="200px"
