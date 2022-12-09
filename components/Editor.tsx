@@ -24,7 +24,7 @@ interface Props {
 
 type ActiveEditor = "html" | "css" | "js";
 
-export default function ({
+export default function Editor({
   iframeRef,
   setShowOverlay,
   resize,
