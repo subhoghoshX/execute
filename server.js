@@ -84,7 +84,5 @@ nextApp.prepare().then(() => {
     });
   });
 
-  server.listen(3000, () => {
-    console.log(`App is runing on port 3000`);
-  });
+  server.listen(8080, "0.0.0.0");
 });
