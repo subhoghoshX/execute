@@ -4,7 +4,6 @@ import Editor from "../components/Editor";
 import Preview from "../components/Preview";
 
 export default function Home() {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [resize, setResize] = useState(0);
 
@@ -20,7 +19,6 @@ export default function Home() {
       </Head>
       <main className="md:flex">
         <Editor
-          iframeRef={iframeRef}
           setShowOverlay={setShowOverlay}
           resize={resize}
           setResize={setResize}
@@ -33,7 +31,7 @@ export default function Home() {
           }}
         >
           {showOverlay && <span className="absolute inset-0"></span>}
-          <Preview iframeRef={iframeRef} />
+          <Preview />
         </section>
       </main>
     </div>

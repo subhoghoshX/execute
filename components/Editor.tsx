@@ -17,7 +17,6 @@ import { useDocStore } from "../store/doc";
 export const socket = io();
 
 interface Props {
-  iframeRef: MutableRefObject<HTMLIFrameElement | null>;
   setShowOverlay: Dispatch<SetStateAction<boolean>>;
   resize: number;
   setResize: Dispatch<SetStateAction<number>>;
@@ -25,15 +24,10 @@ interface Props {
 
 type ActiveEditor = "html" | "css" | "js";
 
-export default function Editor({
-  iframeRef,
-  setShowOverlay,
-  resize,
-  setResize,
-}: Props) {
+export default function Editor({ setShowOverlay, resize, setResize }: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
   const [htmlCode, setHtmlCode] = useState<string | null>(null);
-  const [cssCode, setCssCode] = useState(cssDefault);
+  const [cssCode, setCssCode] = useState("");
   const [jsCode, setJsCode] = useState("");
   const [version, setVersion] = useState<number | null>(null);
 
@@ -56,12 +50,6 @@ export default function Editor({
       socket.off("getDocumentResponse");
     };
   }, []);
-
-  useEffect(() => {
-    if (iframeRef.current?.contentDocument) {
-      iframeRef.current.srcdoc = `${htmlCode}<style>${cssCode}</style><script>${jsCode}</script>`;
-    }
-  }, [htmlCode, cssCode, jsCode]);
 
   function mouseDownHandler() {
     document.addEventListener("mousemove", mouseMoveHandler);
@@ -171,33 +159,3 @@ export default function Editor({
     </div>
   );
 }
-
-const htmlDefault = `<div>
-  <span>Thanks for using Execute.</span>
-</div>
-`;
-const cssDefault = `* {
-  margin: 0;
-}
-
-html, body {
-  height: 100%
-}
-
-div {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-span {
-  font-size: 48px;
-  font-weight: bold;
-  font-family: monospace;
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  background-image: linear-gradient(to right, #ec4899, #8b5cf6);
-}
-`;
