@@ -13,6 +13,7 @@ import { css } from "@codemirror/lang-css";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { getDocument, peerExtension } from "../utils/peerExtension";
 import io from "socket.io-client";
+import { useDocStore } from "../store/doc";
 export const socket = io();
 
 interface Props {
@@ -35,6 +36,10 @@ export default function Editor({
   const [cssCode, setCssCode] = useState(cssDefault);
   const [jsCode, setJsCode] = useState("");
   const [version, setVersion] = useState<number | null>(null);
+
+  const setHtml = useDocStore((state) => state.setHtml);
+  const setCss = useDocStore((state) => state.setCss);
+  const setJs = useDocStore((state) => state.setJs);
 
   useEffect(() => {
     console.log("huaaaaaaaaaaaaaaaa");
@@ -130,9 +135,7 @@ export default function Editor({
           <ReactCodeMirror
             value={htmlCode}
             height="200px"
-            onChange={(value) => {
-              console.log(value);
-            }}
+            onChange={setHtml}
             extensions={[peerExtension(version), html()]}
             className={`flex-grow overflow-hidden ${
               activeEditor == "html" ? "" : "hidden"
@@ -143,7 +146,7 @@ export default function Editor({
         <ReactCodeMirror
           value={cssCode}
           height="200px"
-          onChange={(value) => setCssCode(value)}
+          onChange={setCss}
           extensions={[css()]}
           className={`flex-grow overflow-hidden ${
             activeEditor == "css" ? "" : "hidden"
@@ -153,7 +156,7 @@ export default function Editor({
         <ReactCodeMirror
           value={jsCode}
           height="200px"
-          onChange={(value) => setJsCode(value)}
+          onChange={setJs}
           extensions={[javascript()]}
           className={`flex-grow overflow-hidden ${
             activeEditor == "js" ? "" : "hidden"

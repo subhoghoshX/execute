@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useRef, useState } from "react";
 import Editor from "../components/Editor";
+import Preview from "../components/Preview";
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -32,7 +33,7 @@ export default function Home() {
           }}
         >
           {showOverlay && <span className="absolute inset-0"></span>}
-          <iframe className="h-full w-full" ref={iframeRef}></iframe>
+          <Preview iframeRef={iframeRef} />
         </section>
       </main>
     </div>
