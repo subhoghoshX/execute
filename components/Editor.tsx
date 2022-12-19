@@ -3,6 +3,7 @@ import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import {
+  ChangeEvent,
   Dispatch,
   MutableRefObject,
   SetStateAction,
@@ -14,6 +15,8 @@ import { dracula } from "@uiw/codemirror-theme-dracula";
 import { getDocument, peerExtension } from "../utils/peerExtension";
 import io from "socket.io-client";
 import { useDocStore } from "../store/doc";
+import { vim } from "@replit/codemirror-vim";
+import type { Extension } from "@codemirror/state";
 export const socket = io();
 
 interface Props {
@@ -30,6 +33,7 @@ export default function Editor({ setShowOverlay, resize, setResize }: Props) {
   const [cssCode, setCssCode] = useState("");
   const [jsCode, setJsCode] = useState("");
   const [version, setVersion] = useState<number | null>(null);
+  const [vimMode, setVimMode] = useState<Extension[]>([]);
 
   const setHtml = useDocStore((state) => state.setHtml);
   const setCss = useDocStore((state) => state.setCss);
@@ -78,6 +82,14 @@ export default function Editor({ setShowOverlay, resize, setResize }: Props) {
     setResize(window.innerWidth / 2);
   }, []);
 
+  function enableVim(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setVimMode([vim()]);
+    } else {
+      setVimMode([]);
+    }
+  }
+
   return (
     <div
       className="flex w-1/2 bg-zinc-900"
@@ -86,6 +98,10 @@ export default function Editor({ setShowOverlay, resize, setResize }: Props) {
       <section className="flex h-screen flex-grow flex-col overflow-hidden">
         <div className="py-2 px-1">
           <Logo />
+          <label>
+            <input type="checkbox" onChange={enableVim} />
+            <span className="ml-1 text-white">Vim Mode</span>
+          </label>
         </div>
         <menu className="space-x-px whitespace-nowrap">
           <button
@@ -124,7 +140,7 @@ export default function Editor({ setShowOverlay, resize, setResize }: Props) {
             value={htmlCode}
             height="200px"
             onChange={setHtml}
-            extensions={[peerExtension(version), html()]}
+            extensions={[...vimMode, peerExtension(version), html()]}
             className={`flex-grow overflow-hidden ${
               activeEditor == "html" ? "" : "hidden"
             }`}
