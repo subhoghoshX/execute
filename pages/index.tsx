@@ -23,16 +23,8 @@ export default function Home() {
           resize={resize}
           setResize={setResize}
         />
-        <section
-          className="relative"
-          style={{
-            width: resize ? `${window.innerWidth - resize}px` : "50%",
-            minWidth: 240,
-          }}
-        >
-          {showOverlay && <span className="absolute inset-0"></span>}
-          <Preview />
-        </section>
+
+        <Preview resize={resize} showOverlay={showOverlay} />
       </main>
     </div>
   );
