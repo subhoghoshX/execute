@@ -1,5 +1,4 @@
-import { MutableRefObject } from "react";
-import { useDocStore } from "../store/doc";
+import IFrame from "./IFrame";
 
 interface Props {
   resize: number;
@@ -7,10 +6,6 @@ interface Props {
 }
 
 export default function Preview({ resize, showOverlay }: Props) {
-  const html = useDocStore((state) => state.html);
-  const css = useDocStore((state) => state.css);
-  const js = useDocStore((state) => state.js);
-
   return (
     <section
       className="relative"
@@ -20,10 +15,7 @@ export default function Preview({ resize, showOverlay }: Props) {
       }}
     >
       {showOverlay && <span className="absolute inset-0"></span>}
-      <iframe
-        className="h-full w-full"
-        srcDoc={`<style>${css}</style>${html}<script>${js}</script>`}
-      ></iframe>
+      <IFrame />
     </section>
   );
 }
