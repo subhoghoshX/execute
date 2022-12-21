@@ -6,8 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import type { Extension } from "@codemirror/state";
 
-import { getDocument, peerExtension } from "../utils/peerExtension";
-import { useDocStore } from "../store/doc";
+import { getDocument, peerExtension } from "../../utils/peerExtension";
+import { useDocStore } from "../../store/doc";
 import io from "socket.io-client";
 export const socket = io();
 

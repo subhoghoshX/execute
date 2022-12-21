@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRef, useState } from "react";
 import Editor from "../components/LeftPane";
-import Preview from "../components/Preview";
+import Preview from "../components/RightPane";
 
 export default function Home() {
   const [showOverlay, setShowOverlay] = useState(false);
