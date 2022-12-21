@@ -1,4 +1,4 @@
-import Logo from "../components/Logo";
+import Logo from "./Logo";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import ReactCodeMirror from "@uiw/react-codemirror";

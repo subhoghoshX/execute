@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRef, useState } from "react";
-import Editor from "../components/Editor";
+import Editor from "../components/LeftPane";
 import Preview from "../components/Preview";
 
 export default function Home() {
