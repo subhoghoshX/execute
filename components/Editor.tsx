@@ -2,7 +2,7 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import { css } from "@codemirror/lang-css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import type { Extension } from "@codemirror/state";
 
@@ -42,14 +42,21 @@ export default function Editor({ vimMode, activeEditor }: Props) {
     };
   }, []);
 
+  const extension = useMemo(() => {
+    if (version === null) {
+      return null;
+    }
+    return peerExtension(version);
+  }, [version]);
+
   return (
     <>
-      {htmlCode !== null && version !== null && (
+      {htmlCode !== null && version !== null && extension !== null && (
         <ReactCodeMirror
           value={htmlCode}
           height="200px"
           onChange={setHtml}
-          extensions={[...vimMode, peerExtension(version), html()]}
+          extensions={[...vimMode, extension, html()]}
           className={`flex-grow overflow-hidden ${
             activeEditor == "html" ? "" : "hidden"
           }`}

@@ -10,6 +10,7 @@ import { socket } from "../components/Editor";
 import { ChangeSet, Text } from "@codemirror/state";
 
 export function peerExtension(startVersion: number) {
+  console.log("peer extension");
   class Plugin {
     private pushing = false;
     private done = false;
