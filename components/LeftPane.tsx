@@ -1,7 +1,6 @@
 import Logo from "./Logo";
-import { html } from "@codemirror/lang-html";
-import { javascript } from "@codemirror/lang-javascript";
-import ReactCodeMirror from "@uiw/react-codemirror";
+import type { Extension } from "@codemirror/state";
+
 import {
   ChangeEvent,
   Dispatch,
@@ -10,14 +9,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { css } from "@codemirror/lang-css";
-import { dracula } from "@uiw/codemirror-theme-dracula";
-import { getDocument, peerExtension } from "../utils/peerExtension";
-import io from "socket.io-client";
-import { useDocStore } from "../store/doc";
+
 import { vim } from "@replit/codemirror-vim";
-import type { Extension } from "@codemirror/state";
-export const socket = io();
+
+import Editor from "./Editor";
 
 interface Props {
   setShowOverlay: Dispatch<SetStateAction<boolean>>;
@@ -27,33 +22,10 @@ interface Props {
 
 type ActiveEditor = "html" | "css" | "js";
 
-export default function Editor({ setShowOverlay, resize, setResize }: Props) {
+export default function LeftPane({ setShowOverlay, resize, setResize }: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
-  const [htmlCode, setHtmlCode] = useState<string | null>(null);
-  const [cssCode, setCssCode] = useState("");
-  const [jsCode, setJsCode] = useState("");
-  const [version, setVersion] = useState<number | null>(null);
+
   const [vimMode, setVimMode] = useState<Extension[]>([]);
-
-  const setHtml = useDocStore((state) => state.setHtml);
-  const setCss = useDocStore((state) => state.setCss);
-  const setJs = useDocStore((state) => state.setJs);
-
-  useEffect(() => {
-    console.log("huaaaaaaaaaaaaaaaa");
-    getDocument().then(({ version, doc }) => {
-      setHtmlCode(doc.toString());
-      setVersion(version);
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.off("pullUpdateResponse");
-      socket.off("pushUpdateResponse");
-      socket.off("getDocumentResponse");
-    };
-  }, []);
 
   function mouseDownHandler() {
     document.addEventListener("mousemove", mouseMoveHandler);
@@ -135,38 +107,8 @@ export default function Editor({ setShowOverlay, resize, setResize }: Props) {
             JavaScript
           </button>
         </menu>
-        {htmlCode !== null && version !== null && (
-          <ReactCodeMirror
-            value={htmlCode}
-            height="200px"
-            onChange={setHtml}
-            extensions={[...vimMode, peerExtension(version), html()]}
-            className={`flex-grow overflow-hidden ${
-              activeEditor == "html" ? "" : "hidden"
-            }`}
-            theme={dracula}
-          />
-        )}
-        <ReactCodeMirror
-          value={cssCode}
-          height="200px"
-          onChange={setCss}
-          extensions={[css()]}
-          className={`flex-grow overflow-hidden ${
-            activeEditor == "css" ? "" : "hidden"
-          }`}
-          theme={dracula}
-        />
-        <ReactCodeMirror
-          value={jsCode}
-          height="200px"
-          onChange={setJs}
-          extensions={[javascript()]}
-          className={`flex-grow overflow-hidden ${
-            activeEditor == "js" ? "" : "hidden"
-          }`}
-          theme={dracula}
-        />
+
+        <Editor activeEditor={activeEditor} vimMode={vimMode} />
       </section>
       <button
         className="w-1.5 flex-shrink-0 cursor-ew-resize bg-cyan-500"

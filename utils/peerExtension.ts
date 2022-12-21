@@ -6,7 +6,7 @@ import {
   Update,
 } from "@codemirror/collab";
 import { EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
-import { socket } from "../components/LeftPane";
+import { socket } from "../components/Editor";
 import { ChangeSet, Text } from "@codemirror/state";
 
 export function peerExtension(startVersion: number) {
