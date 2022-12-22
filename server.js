@@ -13,7 +13,8 @@ const handle = nextApp.getRequestHandler();
 // The updates received so far (updates.length gives the current version)
 const updates = [];
 // The current document
-let doc = Text.of(["Start document"]);
+// let doc = Text.of(["Start document"]);
+let doc = "Start document2";
 // Authority message
 const pending = [];
 
@@ -66,7 +67,8 @@ nextApp.prepare().then(() => {
             // Convert the JSON representation to an actual ChangeSet instance
             let changes = ChangeSet.fromJSON(update.changes);
             updates.push({ changes, clientID: update.clientID });
-            doc = changes.apply(doc);
+            // doc = changes.apply(doc);
+            doc = changes.apply(Text.of([doc])).toString();
           }
           socket.emit("pushUpdateResponse", true);
 
@@ -80,7 +82,7 @@ nextApp.prepare().then(() => {
     });
 
     socket.on("getDocument", () => {
-      socket.emit("getDocumentResponse", updates.length, doc.toString());
+      socket.emit("getDocumentResponse", updates.length, doc);
     });
   });
 
