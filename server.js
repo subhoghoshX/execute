@@ -4,6 +4,9 @@ const http = require("http");
 const { Server } = require("socket.io");
 const { ChangeSet, Text } = require("@codemirror/state");
 const { Update } = require("@codemirror/collab");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
 
 const dev = process.env.NODE_ENV !== "production";
 const nextApp = next({ dev });
@@ -13,7 +16,8 @@ const handle = nextApp.getRequestHandler();
 // The updates received so far (updates.length gives the current version)
 const updates = [];
 // The current document
-let doc = Text.of(["Start document"]);
+// let doc = Text.of(["Start document"]);
+// let doc = "Start document2";
 // Authority message
 const pending = [];
 
@@ -55,7 +59,7 @@ nextApp.prepare().then(() => {
     });
 
     // push updates
-    socket.on("pushUpdates", (version, docUpdates) => {
+    socket.on("pushUpdates", async (version, docUpdates) => {
       docUpdates = JSON.parse(docUpdates);
 
       try {
@@ -66,7 +70,21 @@ nextApp.prepare().then(() => {
             // Convert the JSON representation to an actual ChangeSet instance
             let changes = ChangeSet.fromJSON(update.changes);
             updates.push({ changes, clientID: update.clientID });
-            doc = changes.apply(doc);
+            // doc = changes.apply(doc);
+            const document = await prisma.document.findUnique({
+              where: {
+                id: 1,
+              },
+            });
+            const text = changes.apply(Text.of([document.text])).toString();
+            await prisma.document.update({
+              where: {
+                id: 1,
+              },
+              data: {
+                text: text,
+              },
+            });
           }
           socket.emit("pushUpdateResponse", true);
 
@@ -79,8 +97,13 @@ nextApp.prepare().then(() => {
       }
     });
 
-    socket.on("getDocument", () => {
-      socket.emit("getDocumentResponse", updates.length, doc.toString());
+    socket.on("getDocument", async () => {
+      const document = await prisma.document.findUnique({
+        where: {
+          id: 1,
+        },
+      });
+      socket.emit("getDocumentResponse", updates.length, document.text);
     });
   });
 
