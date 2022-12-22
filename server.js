@@ -74,13 +74,13 @@ nextApp.prepare().then(() => {
             // doc = changes.apply(doc);
             const document = await prisma.document.findUnique({
               where: {
-                id: 1,
+                id: documentID,
               },
             });
             const text = changes.apply(Text.of([document.text])).toString();
             await prisma.document.update({
               where: {
-                id: 1,
+                id: documentID,
               },
               data: {
                 text: text,
