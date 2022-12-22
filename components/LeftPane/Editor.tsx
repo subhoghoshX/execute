@@ -30,7 +30,7 @@ export default function Editor({ vimMode, activeEditor }: Props) {
     console.log("huaaaaaaaaaaaaaaaa");
     getDocument().then(({ version, doc }) => {
       setHtmlCode(doc[0].toString());
-      setVersion(version);
+      setVersion(version[0]);
 
       setCssCode(doc[1].toString());
       setJsCode(doc[2].toString());
@@ -49,7 +49,7 @@ export default function Editor({ vimMode, activeEditor }: Props) {
     if (version === null) {
       return null;
     }
-    return peerExtension(version);
+    return peerExtension(version, 1);
   }, [version]);
 
   return (
