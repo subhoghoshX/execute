@@ -1,4 +1,4 @@
-import { useDocStore } from "../store/doc";
+import { useDocStore } from "../../store/doc";
 
 export default function IFrame() {
   const html = useDocStore((state) => state.html);
