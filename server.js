@@ -19,7 +19,7 @@ const updates = { 1: [], 2: [], 3: [] };
 // let doc = Text.of(["Start document"]);
 // let doc = "Start document2";
 // Authority message
-const pending = [];
+const pending = { 1: [], 2: [], 3: [] };
 
 nextApp.prepare().then(() => {
   const app = express();
@@ -49,7 +49,7 @@ nextApp.prepare().then(() => {
           JSON.stringify(updates[documentID].slice(version)),
         );
       } else {
-        pending.push((updates) => {
+        pending[documentID].push((updates) => {
           socket.emit(
             "pullUpdateResponse",
             // as i'm already doing this below (in while loop) -> pending.pop()(updates[documentID]);
@@ -89,8 +89,8 @@ nextApp.prepare().then(() => {
           }
           socket.emit("pushUpdateResponse", true);
 
-          while (pending.length) {
-            pending.pop()(updates[documentID]);
+          while (pending[documentID].length) {
+            pending[documentID].pop()(updates[documentID]);
           }
         }
       } catch (error) {
