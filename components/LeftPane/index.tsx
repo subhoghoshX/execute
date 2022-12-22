@@ -18,11 +18,17 @@ interface Props {
   setShowOverlay: Dispatch<SetStateAction<boolean>>;
   resize: number;
   setResize: Dispatch<SetStateAction<number>>;
+  setTwEnabled: Dispatch<SetStateAction<boolean>>;
 }
 
 type ActiveEditor = "html" | "css" | "js";
 
-export default function LeftPane({ setShowOverlay, resize, setResize }: Props) {
+export default function LeftPane({
+  setShowOverlay,
+  resize,
+  setResize,
+  setTwEnabled,
+}: Props) {
   const [activeEditor, setActiveEditor] = useState<ActiveEditor>("html");
 
   const [vimMode, setVimMode] = useState<Extension[]>([]);
@@ -73,6 +79,13 @@ export default function LeftPane({ setShowOverlay, resize, setResize }: Props) {
           <label>
             <input type="checkbox" onChange={enableVim} />
             <span className="ml-1 text-white">Vim Mode</span>
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              onChange={(e) => setTwEnabled(e.target.checked)}
+            />
+            <span className="ml-1 text-white">Enable Tailwind CSS</span>
           </label>
         </div>
         <menu className="space-x-px whitespace-nowrap">

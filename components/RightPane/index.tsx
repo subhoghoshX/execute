@@ -3,9 +3,10 @@ import IFrame from "./IFrame";
 interface Props {
   resize: number;
   showOverlay: boolean;
+  twEnabled: boolean;
 }
 
-export default function Preview({ resize, showOverlay }: Props) {
+export default function Preview({ resize, showOverlay, twEnabled }: Props) {
   return (
     <section
       className="relative"
@@ -15,7 +16,7 @@ export default function Preview({ resize, showOverlay }: Props) {
       }}
     >
       {showOverlay && <span className="absolute inset-0"></span>}
-      <IFrame />
+      <IFrame twEnabled={twEnabled} />
     </section>
   );
 }
