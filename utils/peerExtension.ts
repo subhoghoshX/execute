@@ -89,14 +89,14 @@ function pullUpdates(version: number): Promise<readonly Update[]> {
   );
 }
 
-export function getDocument(): Promise<{ version: number; doc: Text }> {
+export function getDocument(): Promise<{ version: number; doc: Text[] }> {
   return new Promise((resolve) => {
     socket.emit("getDocument");
 
-    socket.once("getDocumentResponse", (version: number, doc: string) => {
+    socket.once("getDocumentResponse", (version: number, doc: string[]) => {
       resolve({
         version,
-        doc: Text.of(doc.split("\n")),
+        doc: doc.map((d) => Text.of(d.split("\n"))),
       });
     });
   });

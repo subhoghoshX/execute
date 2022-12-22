@@ -98,12 +98,14 @@ nextApp.prepare().then(() => {
     });
 
     socket.on("getDocument", async () => {
-      const document = await prisma.document.findUnique({
+      let documents = await prisma.document.findMany({
         where: {
-          id: 1,
+          projectId: 1,
         },
       });
-      socket.emit("getDocumentResponse", updates.length, document.text);
+      // strip away everything except text
+      documents = documents.map((document) => document.text);
+      socket.emit("getDocumentResponse", updates.length, documents);
     });
   });
 

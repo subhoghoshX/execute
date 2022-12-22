@@ -29,8 +29,11 @@ export default function Editor({ vimMode, activeEditor }: Props) {
   useEffect(() => {
     console.log("huaaaaaaaaaaaaaaaa");
     getDocument().then(({ version, doc }) => {
-      setHtmlCode(doc.toString());
+      setHtmlCode(doc[0].toString());
       setVersion(version);
+
+      setCssCode(doc[1].toString());
+      setJsCode(doc[2].toString());
     });
 
     return () => {
