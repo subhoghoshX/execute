@@ -69,7 +69,7 @@ function pushUpdates(
   return new Promise((resolve) => {
     socket.emit("pushUpdates", version, JSON.stringify(updates), documentID);
 
-    socket.once("pushUpdateResponse", (status: boolean) => {
+    socket.once(`pushUpdateResponse${documentID}`, (status: boolean) => {
       resolve(status);
     });
   });
@@ -82,7 +82,7 @@ function pullUpdates(
   return new Promise((resolve) => {
     socket.emit("pullUpdates", version, documentID);
 
-    socket.once("pullUpdateResponse", (updates: any) => {
+    socket.once(`pullUpdateResponse${documentID}`, (updates: any) => {
       resolve(JSON.parse(updates));
     });
   }).then((updates: any) =>

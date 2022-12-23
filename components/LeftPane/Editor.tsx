@@ -18,9 +18,10 @@ interface Props {
 
 export default function Editor({ vimMode, activeEditor }: Props) {
   const [htmlCode, setHtmlCode] = useState<string | null>(null);
-  const [cssCode, setCssCode] = useState("");
+  const [cssCode, setCssCode] = useState<string | null>(null);
   const [jsCode, setJsCode] = useState("");
   const [version, setVersion] = useState<number | null>(null);
+  const [cssVersion, setCssVersion] = useState<number | null>(null);
 
   const setHtml = useDocStore((state) => state.setHtml);
   const setCss = useDocStore((state) => state.setCss);
@@ -33,6 +34,7 @@ export default function Editor({ vimMode, activeEditor }: Props) {
       setVersion(version[0]);
 
       setCssCode(doc[1].toString());
+      setCssVersion(version[1]);
       setJsCode(doc[2].toString());
     });
 
@@ -52,6 +54,13 @@ export default function Editor({ vimMode, activeEditor }: Props) {
     return peerExtension(version, 1);
   }, [version]);
 
+  const cssExtension = useMemo(() => {
+    if (cssVersion === null) {
+      return null;
+    }
+    return peerExtension(cssVersion, 2);
+  }, [cssVersion]);
+
   return (
     <>
       {htmlCode !== null && version !== null && extension !== null && (
@@ -66,16 +75,18 @@ export default function Editor({ vimMode, activeEditor }: Props) {
           theme={dracula}
         />
       )}
-      <ReactCodeMirror
-        value={cssCode}
-        height="200px"
-        onChange={setCss}
-        extensions={[css()]}
-        className={`flex-grow overflow-hidden ${
-          activeEditor == "css" ? "" : "hidden"
-        }`}
-        theme={dracula}
-      />
+      {cssCode !== null && cssVersion !== null && cssExtension !== null && (
+        <ReactCodeMirror
+          value={cssCode}
+          height="200px"
+          onChange={setCss}
+          extensions={[cssExtension, css()]}
+          className={`flex-grow overflow-hidden ${
+            activeEditor == "css" ? "" : "hidden"
+          }`}
+          theme={dracula}
+        />
+      )}
       <ReactCodeMirror
         value={jsCode}
         height="200px"

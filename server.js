@@ -45,13 +45,13 @@ nextApp.prepare().then(() => {
     socket.on("pullUpdates", (version, documentID) => {
       if (version < updates[documentID].length) {
         socket.emit(
-          "pullUpdateResponse",
+          `pullUpdateResponse${documentID}`,
           JSON.stringify(updates[documentID].slice(version)),
         );
       } else {
         pending[documentID].push((updates) => {
           socket.emit(
-            "pullUpdateResponse",
+            `pullUpdateResponse${documentID}`,
             // as i'm already doing this below (in while loop) -> pending.pop()(updates[documentID]);
             JSON.stringify(updates.slice(version)),
           );
@@ -65,7 +65,7 @@ nextApp.prepare().then(() => {
 
       try {
         if (version != updates[documentID].length) {
-          socket.emit("pushUpdateResponse", false);
+          socket.emit(`pushUpdateResponse${documentID}`, false);
         } else {
           for (let update of docUpdates) {
             // Convert the JSON representation to an actual ChangeSet instance
@@ -87,7 +87,7 @@ nextApp.prepare().then(() => {
               },
             });
           }
-          socket.emit("pushUpdateResponse", true);
+          socket.emit(`pushUpdateResponse${documentID}`, true);
 
           while (pending[documentID].length) {
             pending[documentID].pop()(updates[documentID]);
