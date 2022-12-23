@@ -9,7 +9,7 @@ import { EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
 import { socket } from "../components/LeftPane/Editor";
 import { ChangeSet, Text } from "@codemirror/state";
 
-export function peerExtension(startVersion: number) {
+export function peerExtension(startVersion: number, documentID: number) {
   console.log("peer extension");
   class Plugin {
     private pushing = false;
@@ -28,7 +28,7 @@ export function peerExtension(startVersion: number) {
       if (this.pushing || !updates.length) return;
       this.pushing = true;
       const version = getSyncedVersion(this.view.state);
-      await pushUpdates(version, updates);
+      await pushUpdates(version, updates, documentID);
       this.pushing = false;
       // Regardless of whethere the push failed or new updates came in
       // while it was running, try again if there's updates remaining
@@ -40,7 +40,7 @@ export function peerExtension(startVersion: number) {
     async pull() {
       while (!this.done) {
         const version = getSyncedVersion(this.view.state);
-        const updates = await pullUpdates(version);
+        const updates = await pullUpdates(version, documentID);
         this.view.dispatch(receiveUpdates(this.view.state, updates));
       }
     }
@@ -58,6 +58,7 @@ export function peerExtension(startVersion: number) {
 function pushUpdates(
   version: number,
   fullUpdates: readonly Update[],
+  documentID: number,
 ): Promise<boolean> {
   // Strip of transaction data
   const updates = fullUpdates.map((u) => ({
@@ -66,19 +67,22 @@ function pushUpdates(
   }));
 
   return new Promise((resolve) => {
-    socket.emit("pushUpdates", version, JSON.stringify(updates));
+    socket.emit("pushUpdates", version, JSON.stringify(updates), documentID);
 
-    socket.once("pushUpdateResponse", (status: boolean) => {
+    socket.once(`pushUpdateResponse${documentID}`, (status: boolean) => {
       resolve(status);
     });
   });
 }
 
-function pullUpdates(version: number): Promise<readonly Update[]> {
+function pullUpdates(
+  version: number,
+  documentID: number,
+): Promise<readonly Update[]> {
   return new Promise((resolve) => {
-    socket.emit("pullUpdates", version);
+    socket.emit("pullUpdates", version, documentID);
 
-    socket.once("pullUpdateResponse", (updates: any) => {
+    socket.once(`pullUpdateResponse${documentID}`, (updates: any) => {
       resolve(JSON.parse(updates));
     });
   }).then((updates: any) =>
@@ -89,14 +93,14 @@ function pullUpdates(version: number): Promise<readonly Update[]> {
   );
 }
 
-export function getDocument(): Promise<{ version: number; doc: Text }> {
+export function getDocument(): Promise<{ version: number[]; doc: Text[] }> {
   return new Promise((resolve) => {
     socket.emit("getDocument");
 
-    socket.once("getDocumentResponse", (version: number, doc: string) => {
+    socket.once("getDocumentResponse", (version: number[], doc: string[]) => {
       resolve({
         version,
-        doc: Text.of(doc.split("\n")),
+        doc: doc.map((d) => Text.of(d.split("\n"))),
       });
     });
   });

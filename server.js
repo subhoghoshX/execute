@@ -14,12 +14,12 @@ const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
 
 // The updates received so far (updates.length gives the current version)
-const updates = [];
+const updates = { 1: [], 2: [], 3: [] };
 // The current document
 // let doc = Text.of(["Start document"]);
 // let doc = "Start document2";
 // Authority message
-const pending = [];
+const pending = { 1: [], 2: [], 3: [] };
 
 nextApp.prepare().then(() => {
   const app = express();
@@ -42,16 +42,17 @@ nextApp.prepare().then(() => {
     });
     console.log("one user connected");
     // pull updates
-    socket.on("pullUpdates", (version) => {
-      if (version < updates.length) {
+    socket.on("pullUpdates", (version, documentID) => {
+      if (version < updates[documentID].length) {
         socket.emit(
-          "pullUpdateResponse",
-          JSON.stringify(updates.slice(version)),
+          `pullUpdateResponse${documentID}`,
+          JSON.stringify(updates[documentID].slice(version)),
         );
       } else {
-        pending.push((updates) => {
+        pending[documentID].push((updates) => {
           socket.emit(
-            "pullUpdateResponse",
+            `pullUpdateResponse${documentID}`,
+            // as i'm already doing this below (in while loop) -> pending.pop()(updates[documentID]);
             JSON.stringify(updates.slice(version)),
           );
         });
@@ -59,37 +60,37 @@ nextApp.prepare().then(() => {
     });
 
     // push updates
-    socket.on("pushUpdates", async (version, docUpdates) => {
+    socket.on("pushUpdates", async (version, docUpdates, documentID) => {
       docUpdates = JSON.parse(docUpdates);
 
       try {
-        if (version != updates.length) {
-          socket.emit("pushUpdateResponse", false);
+        if (version != updates[documentID].length) {
+          socket.emit(`pushUpdateResponse${documentID}`, false);
         } else {
           for (let update of docUpdates) {
             // Convert the JSON representation to an actual ChangeSet instance
             let changes = ChangeSet.fromJSON(update.changes);
-            updates.push({ changes, clientID: update.clientID });
+            updates[documentID].push({ changes, clientID: update.clientID });
             // doc = changes.apply(doc);
             const document = await prisma.document.findUnique({
               where: {
-                id: 1,
+                id: documentID,
               },
             });
             const text = changes.apply(Text.of([document.text])).toString();
             await prisma.document.update({
               where: {
-                id: 1,
+                id: documentID,
               },
               data: {
                 text: text,
               },
             });
           }
-          socket.emit("pushUpdateResponse", true);
+          socket.emit(`pushUpdateResponse${documentID}`, true);
 
-          while (pending.length) {
-            pending.pop()(updates);
+          while (pending[documentID].length) {
+            pending[documentID].pop()(updates[documentID]);
           }
         }
       } catch (error) {
@@ -98,12 +99,18 @@ nextApp.prepare().then(() => {
     });
 
     socket.on("getDocument", async () => {
-      const document = await prisma.document.findUnique({
+      let documents = await prisma.document.findMany({
         where: {
-          id: 1,
+          projectId: 1,
         },
       });
-      socket.emit("getDocumentResponse", updates.length, document.text);
+      // strip away everything except text
+      documents = documents.map((document) => document.text);
+      socket.emit(
+        "getDocumentResponse",
+        [updates[1].length, updates[2].length, updates[3].length],
+        documents,
+      );
     });
   });
 
