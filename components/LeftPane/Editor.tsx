@@ -19,9 +19,10 @@ interface Props {
 export default function Editor({ vimMode, activeEditor }: Props) {
   const [htmlCode, setHtmlCode] = useState<string | null>(null);
   const [cssCode, setCssCode] = useState<string | null>(null);
-  const [jsCode, setJsCode] = useState("");
+  const [jsCode, setJsCode] = useState<string | null>(null);
   const [version, setVersion] = useState<number | null>(null);
   const [cssVersion, setCssVersion] = useState<number | null>(null);
+  const [jsVersion, setJsVersion] = useState<number | null>(null);
 
   const setHtml = useDocStore((state) => state.setHtml);
   const setCss = useDocStore((state) => state.setCss);
@@ -35,7 +36,9 @@ export default function Editor({ vimMode, activeEditor }: Props) {
 
       setCssCode(doc[1].toString());
       setCssVersion(version[1]);
+
       setJsCode(doc[2].toString());
+      setJsVersion(version[2]);
     });
 
     return () => {
@@ -60,6 +63,13 @@ export default function Editor({ vimMode, activeEditor }: Props) {
     }
     return peerExtension(cssVersion, 2);
   }, [cssVersion]);
+
+  const jsExtension = useMemo(() => {
+    if (jsVersion === null) {
+      return null;
+    }
+    return peerExtension(jsVersion, 3);
+  }, [jsVersion]);
 
   return (
     <>
@@ -87,16 +97,18 @@ export default function Editor({ vimMode, activeEditor }: Props) {
           theme={dracula}
         />
       )}
-      <ReactCodeMirror
-        value={jsCode}
-        height="200px"
-        onChange={setJs}
-        extensions={[javascript()]}
-        className={`flex-grow overflow-hidden ${
-          activeEditor == "js" ? "" : "hidden"
-        }`}
-        theme={dracula}
-      />
+      {jsCode !== null && jsVersion !== null && jsExtension !== null && (
+        <ReactCodeMirror
+          value={jsCode}
+          height="200px"
+          onChange={setJs}
+          extensions={[jsExtension, javascript()]}
+          className={`flex-grow overflow-hidden ${
+            activeEditor == "js" ? "" : "hidden"
+          }`}
+          theme={dracula}
+        />
+      )}
     </>
   );
 }
