@@ -83,7 +83,7 @@ export default function App() {
   return (
     <main className="h-screen">
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize={40}>
           <Tabs defaultValue="html" value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full overflow-hidden">
             <menu className="p-2 border-b border-zinc-200 flex items-center gap-2 dark:border-zinc-800">
               <TabsList>
@@ -109,7 +109,7 @@ export default function App() {
 
               <Popover>
                 <PopoverTrigger className="ml-auto" asChild>
-                  <Button size="icon" variant="outline">
+                  <Button size="icon" variant="outline" className="flex-shrink-0">
                     <Settings className="size-4" />
                   </Button>
                 </PopoverTrigger>
@@ -285,7 +285,7 @@ export default function App() {
           </Tabs>
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize={60}>
           <iframe className="h-full w-full bg-white" srcDoc={srcDoc}></iframe>
         </ResizablePanel>
       </ResizablePanelGroup>
