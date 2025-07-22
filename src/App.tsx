@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./components/ui/tooltip";
 import { expandAbbreviation } from "@emmetio/codemirror6-plugin";
+import { indentWithTab } from "@codemirror/commands";
 
 const defaultCode = `<div class="h-screen flex justify-center items-center">
   <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 max-w-md w-full transform hover:scale-105 transition-transform duration-300">
@@ -255,6 +256,9 @@ export default function App() {
                       key: "Tab",
                       run: expandAbbreviation,
                     },
+                    // don't remove this line, it allows to use Tab for indentation in empty lines
+                    // otherwise it focuses out of the editor
+                    indentWithTab,
                   ]),
                 ]}
                 theme={isDark ? vscodeDark : vscodeLight}
