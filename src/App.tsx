@@ -34,7 +34,7 @@ const defaultCode = `<div class="h-screen flex justify-center items-center">
     <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mt-6"></div>
   </div>
 </div>
-`
+`;
 
 export default function App() {
   const params = new URLSearchParams(window.location.search);
@@ -310,7 +310,7 @@ export default function App() {
             </TabsContent>
           </Tabs>
         </ResizablePanel>
-        <ResizableHandle />
+        <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
         <ResizablePanel defaultSize={65}>
           <iframe className="h-full w-full bg-white" srcDoc={srcDoc}></iframe>
         </ResizablePanel>
