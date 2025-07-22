@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import ReactCodeMirror from "@uiw/react-codemirror";
+import ReactCodeMirror, { keymap } from "@uiw/react-codemirror";
 import { useEffect, useState } from "react";
 import { MonitorCog, Moon, Settings, Sun } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -16,6 +16,7 @@ import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./components/ui/tooltip";
+import { expandAbbreviation } from "@emmetio/codemirror6-plugin";
 
 const defaultCode = `<div class="h-screen flex justify-center items-center">
   <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 max-w-md w-full transform hover:scale-105 transition-transform duration-300">
@@ -246,8 +247,18 @@ export default function App() {
                 onCreateEditor={(view) => {
                   view.focus();
                 }}
-                extensions={[...(isVimEnabled ? [vim()] : []), html()]}
+                extensions={[
+                  ...(isVimEnabled ? [vim()] : []),
+                  html(),
+                  keymap.of([
+                    {
+                      key: "Tab",
+                      run: expandAbbreviation,
+                    },
+                  ]),
+                ]}
                 theme={isDark ? vscodeDark : vscodeLight}
+                indentWithTab={false}
               />
             </TabsContent>
             <TabsContent value="css" className="mt-0 flex-grow">
