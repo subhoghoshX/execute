@@ -11,7 +11,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-import { vim } from "@replit/codemirror-vim";
+import { Vim, vim } from "@replit/codemirror-vim";
 import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -82,6 +82,25 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
     setJsCode(jsBuffer);
     updateProject({ id: project._id, html: htmlBuffer, css: cssBuffer, js: jsBuffer });
   }
+
+  useEffect(() => {
+    Vim.defineEx("write", "w", () => {
+      switch (activeTab) {
+        case "html":
+          setHtmlCode(htmlBuffer);
+          updateProject({ id: project._id, html: htmlBuffer });
+          break;
+        case "css":
+          setCssCode(cssBuffer);
+          updateProject({ id: project._id, css: cssBuffer });
+          break;
+        case "js":
+          setJsCode(jsBuffer);
+          updateProject({ id: project._id, js: jsBuffer });
+          break;
+      }
+    });
+  }, [activeTab, htmlBuffer, cssBuffer, jsBuffer, project._id, updateProject]);
 
   return (
     <main className="h-screen">
