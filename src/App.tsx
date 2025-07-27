@@ -14,7 +14,6 @@ import { javascript } from "@codemirror/lang-javascript";
 import { Vim, vim } from "@replit/codemirror-vim";
 import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./components/ui/tooltip";
 import { expandAbbreviation } from "@emmetio/codemirror6-plugin";
 import { indentWithTab } from "@codemirror/commands";
@@ -217,34 +216,6 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
                   </ToggleGroup>
                 </PopoverContent>
               </Popover>
-              <Button
-                className="relative flex items-center justify-center"
-                onClick={async () => {
-                  if (!htmlCode && !cssCode && !jsCode) {
-                    toast("Nothing to share.", {
-                      description: "Make sure to write some code and save it.",
-                    });
-                    return;
-                  }
-
-                  const codeString = encodeURIComponent(
-                    JSON.stringify({
-                      htmlCode,
-                      cssCode,
-                      jsCode,
-                    }),
-                  );
-
-                  const url = new URL(`?code=${codeString}`, window.location.href);
-
-                  await navigator.clipboard.writeText(url.toString());
-                  toast("Link copied to clipboard");
-
-                  window.history.replaceState(null, "", url.toString());
-                }}
-              >
-                Share
-              </Button>
             </menu>
             <TabsContent value="html" className="mt-0 flex-grow overflow-hidden">
               <ReactCodeMirror
