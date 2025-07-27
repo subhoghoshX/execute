@@ -18,32 +18,29 @@ import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./components/ui/tooltip";
 import { expandAbbreviation } from "@emmetio/codemirror6-plugin";
 import { indentWithTab } from "@codemirror/commands";
-
-const defaultCode = `<div class="h-screen flex justify-center items-center">
-  <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 max-w-md w-full transform hover:scale-105 transition-transform duration-300">
-    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl mb-6 mx-auto">
-      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-      </svg>
-    </div>
-
-    <h2 class="text-2xl font-bold text-gray-900 text-center mb-4">Execute</h2>
-
-    <p class="text-gray-600 text-center leading-relaxed">
-      A quick way to test some HTML/CSS/JS code without scaffolding a new project locally.
-    </p>
-
-    <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mt-6"></div>
-  </div>
-</div>
-`;
+import { useParams } from "react-router";
+import { useDarkMode } from "./lib/utils";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../convex/_generated/api";
+import type { Id } from "convex/_generated/dataModel";
 
 export default function App() {
-  const params = new URLSearchParams(window.location.search);
-  const codeObj = JSON.parse(decodeURIComponent(params.get("code") ?? "{}"));
-  const [htmlBuffer, setHtmlBuffer] = useState(codeObj.htmlCode ?? defaultCode);
-  const [cssBuffer, setCssBuffer] = useState(codeObj.cssCode ?? "");
-  const [jsBuffer, setJsBuffer] = useState(codeObj.jsCode ?? "");
+  const { projectId } = useParams();
+  const project = useQuery(api.projects.get, projectId ? { id: projectId as Id<"projects"> } : "skip");
+
+  if (project === undefined) {
+    return <main className="flex h-screen items-center justify-center">Fetching project...</main>;
+  } else if (project === null) {
+    return <main className="flex h-screen items-center justify-center">The project doesn't exist.</main>;
+  } else {
+    return <Editor project={project} />;
+  }
+}
+
+export function Editor({ project }: { project: { _id: Id<"projects">; html: string; css: string; js: string } }) {
+  const [htmlBuffer, setHtmlBuffer] = useState(project.html);
+  const [cssBuffer, setCssBuffer] = useState(project.css);
+  const [jsBuffer, setJsBuffer] = useState(project.js);
 
   const [htmlCode, setHtmlCode] = useState(htmlBuffer);
   const [cssCode, setCssCode] = useState(cssBuffer);
@@ -77,6 +74,15 @@ export default function App() {
     }
   }, [isDark]);
 
+  const updateProject = useMutation(api.projects.update);
+
+  function saveEverything() {
+    setHtmlCode(htmlBuffer);
+    setCssCode(cssBuffer);
+    setJsCode(jsBuffer);
+    updateProject({ id: project._id, html: htmlBuffer, css: cssBuffer, js: jsBuffer });
+  }
+
   return (
     <main className="h-screen">
       <ResizablePanelGroup direction="horizontal">
@@ -109,9 +115,7 @@ export default function App() {
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setHtmlCode(htmlBuffer);
-                        setCssCode(cssBuffer);
-                        setJsCode(jsBuffer);
+                        saveEverything();
                       }}
                     >
                       Save
@@ -232,6 +236,7 @@ export default function App() {
                   if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
                     e.preventDefault();
                     setHtmlCode(htmlBuffer);
+                    updateProject({ id: project._id, html: htmlBuffer });
                   }
                   if (e.altKey && e.key === "1") {
                     e.preventDefault();
@@ -274,6 +279,7 @@ export default function App() {
                   if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
                     e.preventDefault();
                     setCssCode(cssBuffer);
+                    updateProject({ id: project._id, css: cssBuffer });
                   }
                   if (e.altKey && e.key === "1") {
                     e.preventDefault();
@@ -303,6 +309,7 @@ export default function App() {
                   if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
                     e.preventDefault();
                     setJsCode(jsBuffer);
+                    updateProject({ id: project._id, js: jsBuffer });
                   }
                   if (e.altKey && e.key === "1") {
                     e.preventDefault();
@@ -356,42 +363,4 @@ function generateSourceDoc(html: string, css: string, js: string, isTailwindEnab
     </body>
     </html>
   `;
-}
-
-function useDarkMode() {
-  const [isDark, setIsDark] = useState(() => {
-    const theme = localStorage.getItem("theme");
-    if (theme === "dark") {
-      return true;
-    } else if (theme === "light") {
-      return false;
-    } else {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      return isDark;
-    }
-  });
-
-  useEffect(() => {
-    function setDarkMode() {
-      const theme = localStorage.getItem("theme");
-      if (theme === "dark") {
-        setIsDark(true);
-      } else if (theme === "light") {
-        setIsDark(false);
-      } else {
-        const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setIsDark(isDark);
-      }
-    }
-
-    window.addEventListener("storage", setDarkMode);
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", setDarkMode);
-
-    return () => {
-      window.removeEventListener("storage", setDarkMode);
-      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", setDarkMode);
-    };
-  }, []);
-
-  return [isDark, setIsDark] as const;
 }
