@@ -265,7 +265,7 @@ export default function App() {
                 indentWithTab={false}
               />
             </TabsContent>
-            <TabsContent value="css" className="mt-0 flex-grow">
+            <TabsContent value="css" className="mt-0 flex-grow overflow-hidden">
               <ReactCodeMirror
                 className="h-full [&>.cm-editor]:h-full [&>.cm-editor]:outline-none"
                 value={cssBuffer}
@@ -294,7 +294,7 @@ export default function App() {
                 theme={isDark ? vscodeDark : vscodeLight}
               />
             </TabsContent>
-            <TabsContent value="js" className="mt-0 flex-grow">
+            <TabsContent value="js" className="mt-0 flex-grow overflow-hidden">
               <ReactCodeMirror
                 className="h-full [&>.cm-editor]:h-full [&>.cm-editor]:outline-none"
                 value={jsBuffer}
