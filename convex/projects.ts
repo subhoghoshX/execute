@@ -39,9 +39,9 @@ export const update = mutation({
   args: { id: v.id("projects"), html: v.optional(v.string()), css: v.optional(v.string()), js: v.optional(v.string()) },
   async handler(ctx, args) {
     return await ctx.db.patch(args.id, {
-      ...(args.html ? { html: args.html } : {}),
-      ...(args.css ? { css: args.css } : {}),
-      ...(args.js ? { js: args.js } : {}),
+      ...(args.html !== undefined ? { html: args.html } : {}),
+      ...(args.css !== undefined ? { css: args.css } : {}),
+      ...(args.js !== undefined ? { js: args.js } : {}),
     });
   },
 });
