@@ -4,6 +4,7 @@ import {
   SandpackCodeEditor,
   SandpackPreview,
   SandpackFileExplorer,
+  FileTabs,
   useSandpack,
 } from "@codesandbox/sandpack-react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Settings, Sun, Moon, MonitorCog } from "lucide-react";
 import { useDarkMode } from "./lib/utils";
 import { useEffect, useCallback } from "react";
@@ -183,8 +185,12 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
                 <SandpackFileExplorer className="h-full" />
               </ResizablePanel>
               <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
-              <ResizablePanel defaultSize={35}>
-                <SandpackCodeEditor showTabs showLineNumbers showInlineErrors wrapContent className="h-full" />
+              <ResizablePanel defaultSize={35} className="flex h-full flex-col">
+                <ScrollArea className="shrink-0 border-b">
+                  <FileTabs className="[&_[role=tab]]:!outline-none" />
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+                <SandpackCodeEditor showTabs={false} showLineNumbers showInlineErrors className="flex-1" />
               </ResizablePanel>
               <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
               <ResizablePanel defaultSize={45}>
