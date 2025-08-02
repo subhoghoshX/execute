@@ -184,7 +184,7 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
               <ResizablePanel defaultSize={10} minSize={10}>
                 <SandpackFileExplorer className="h-full" />
               </ResizablePanel>
-              <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
+              <ResizableHandle className="bg-gray-300 outline-2 outline-gray-300 transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500 dark:bg-black dark:outline-black" />
               <ResizablePanel defaultSize={40} className="flex h-full flex-col">
                 <ScrollArea className="shrink-0 border-b">
                   <FileTabs className="[&_[role=tab]]:!outline-none" />
@@ -192,7 +192,7 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
                 </ScrollArea>
                 <SandpackCodeEditor showTabs={false} showLineNumbers showInlineErrors className="flex-1" />
               </ResizablePanel>
-              <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
+              <ResizableHandle className="bg-gray-300 outline-2 outline-gray-300 transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500 dark:bg-black dark:outline-black" />
               <ResizablePanel defaultSize={50}>
                 <SandpackPreview className="h-full" showOpenInCodeSandbox={false} />
               </ResizablePanel>

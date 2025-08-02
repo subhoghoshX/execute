@@ -338,7 +338,7 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
             </TabsContent>
           </Tabs>
         </ResizablePanel>
-        <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
+        <ResizableHandle className="bg-gray-300 outline-2 outline-gray-300 transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500 dark:bg-black dark:outline-black" />
         <ResizablePanel defaultSize={65}>
           <iframe className="h-full w-full bg-white" srcDoc={srcDoc}></iframe>
         </ResizablePanel>
