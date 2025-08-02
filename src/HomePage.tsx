@@ -4,6 +4,7 @@ import { api } from "../convex/_generated/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { cn, useDarkMode } from "./lib/utils";
+import { Code2, Sparkles, Zap, FileCode, Palette, Play } from "lucide-react";
 
 export default function HomePage() {
   const createProject = useMutation(api.projects.create);
@@ -40,32 +41,110 @@ export default function HomePage() {
   }, [isDark]);
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-3">
-      <Button
-        disabled={isProjectCreating}
-        onClick={async () => {
-          setIsProjectCreating(true);
-          const projectId = await createProject({ type: "classic" });
-          setIsProjectCreating(false);
-          navigate(`/${projectId}`);
-        }}
-      >
-        <JsIcon className="dark:fill-primary-foreground fill-[#F7DF1E]" />
-        Vanilla Project<Kbd className="border-gray-700 dark:border-gray-400">V</Kbd>
-      </Button>
-      <Button
-        variant="secondary"
-        disabled={isProjectCreating}
-        onClick={async () => {
-          setIsProjectCreating(true);
-          const projectId = await createProject({ type: "sandpack" });
-          setIsProjectCreating(false);
-          navigate(`/${projectId}?mode=react`);
-        }}
-      >
-        <ReactIcon className="fill-[#61DAFB]" />
-        React Project<Kbd>R</Kbd>
-      </Button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900">
+      <div className="container mx-auto px-6 py-8">
+        {/* Header */}
+        <header className="mb-12 text-center">
+          <div className="mb-4 flex items-center justify-center">
+            <div className="relative">
+              <Code2 className="h-12 w-12 text-blue-600 dark:text-blue-400" />
+              <Sparkles className="absolute -top-1 -right-1 h-4 w-4 animate-pulse text-yellow-500" />
+            </div>
+          </div>
+          <h1 className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-5xl font-bold text-transparent">
+            Execute
+          </h1>
+          <p className="mx-auto max-w-2xl text-xl text-gray-600 dark:text-gray-300">
+            A powerful web-based code playground for rapid prototyping and experimentation
+          </p>
+        </header>
+
+        {/* Features Grid */}
+        <div className="mb-12 grid gap-6 md:grid-cols-3">
+          <FeatureCard
+            icon={<FileCode className="h-6 w-6" />}
+            title="HTML, CSS & JS"
+            description="Write and test vanilla web technologies with live preview"
+          />
+          <FeatureCard
+            icon={<ReactIcon className="h-6 w-6 fill-[#61DAFB]" />}
+            title="React Support"
+            description="Build modern React components with JSX and ES6+ features"
+          />
+          <FeatureCard
+            icon={<Zap className="h-6 w-6" />}
+            title="Instant Preview"
+            description="See your changes live as you type with real-time updates"
+          />
+          <FeatureCard
+            icon={<Code2 className="h-6 w-6" />}
+            title="Vim Mode"
+            description="Efficient editing with vim keybindings and commands"
+          />
+          <FeatureCard
+            icon={<Palette className="h-6 w-6" />}
+            title="TailwindCSS"
+            description="Rapid styling with utility-first CSS framework"
+          />
+          <FeatureCard
+            icon={<Play className="h-6 w-6" />}
+            title="Share Projects"
+            description="Collaborate and share your creations with unique URLs"
+          />
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-800 dark:text-gray-200">Start coding in seconds</h2>
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button
+              size="lg"
+              disabled={isProjectCreating}
+              onClick={async () => {
+                setIsProjectCreating(true);
+                const projectId = await createProject({ type: "classic" });
+                setIsProjectCreating(false);
+                navigate(`/${projectId}`);
+              }}
+              className="min-w-48 border-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl"
+            >
+              <JsIcon className="mr-2 h-5 w-5 fill-current" />
+              Create Vanilla Project
+              <Kbd className="ml-3">V</Kbd>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              disabled={isProjectCreating}
+              onClick={async () => {
+                setIsProjectCreating(true);
+                const projectId = await createProject({ type: "sandpack" });
+                setIsProjectCreating(false);
+                navigate(`/${projectId}?mode=react`);
+              }}
+              className="min-w-48 border-2 border-blue-600 text-blue-600 transition-all duration-200 hover:bg-blue-600 hover:text-white"
+            >
+              <ReactIcon className="mr-2 h-5 w-5 fill-[#61DAFB]" />
+              Create React Project
+              <Kbd>R</Kbd>
+            </Button>
+          </div>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            Press <Kbd className="inline-flex h-5 text-xs">V</Kbd> or <Kbd className="inline-flex h-5 text-xs">R</Kbd>{" "}
+            anywhere to quickly create a project
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+      <div className="mb-3 text-blue-600 dark:text-blue-400">{icon}</div>
+      <h3 className="mb-2 font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
     </div>
   );
 }
