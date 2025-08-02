@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Settings, Sun, Moon, MonitorCog } from "lucide-react";
 import { useDarkMode } from "./lib/utils";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
@@ -34,11 +34,16 @@ interface SandpackEditorProps {
   };
 }
 
-function SaveButton({ projectId, project }: { projectId: Id<"projects">; project: { files?: Record<string, { code: string }> } }) {
+interface SaveButtonProps {
+  projectId: Id<"projects">;
+  project: { files?: Record<string, { code: string }> };
+}
+
+function SaveButton({ projectId, project }: SaveButtonProps) {
   const { sandpack } = useSandpack();
   const updateProject = useMutation(api.projects.update);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     const files = sandpack.files;
     const formattedFiles: Record<string, { code: string }> = {};
 
@@ -46,11 +51,8 @@ function SaveButton({ projectId, project }: { projectId: Id<"projects">; project
       formattedFiles[path] = { code: file.code };
     });
 
-    await updateProject({
-      id: projectId,
-      files: formattedFiles,
-    });
-  };
+    await updateProject({ id: projectId, files: formattedFiles });
+  }, [sandpack.files, updateProject, projectId]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -186,7 +188,7 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
               </ResizablePanel>
               <ResizableHandle className="bg-black outline-2 outline-black transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500" />
               <ResizablePanel defaultSize={45}>
-                <SandpackPreview className="h-full" />
+                <SandpackPreview className="h-full" showOpenInCodeSandbox={false} />
               </ResizablePanel>
             </ResizablePanelGroup>
           </SandpackLayout>
