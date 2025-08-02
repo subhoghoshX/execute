@@ -34,7 +34,7 @@ interface SandpackEditorProps {
   };
 }
 
-function SaveButton({ projectId }: { projectId: Id<"projects"> }) {
+function SaveButton({ projectId, project }: { projectId: Id<"projects">; project: { files?: Record<string, { code: string }> } }) {
   const { sandpack } = useSandpack();
   const updateProject = useMutation(api.projects.update);
 
@@ -63,6 +63,30 @@ function SaveButton({ projectId }: { projectId: Id<"projects"> }) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleSave]);
+
+  // Check if there are changes by comparing current files with saved files
+  const hasChanges = () => {
+    const currentFiles = sandpack.files;
+    const savedFiles = project.files || {};
+
+    // If different number of files, there are changes
+    if (Object.keys(currentFiles).length !== Object.keys(savedFiles).length) {
+      return true;
+    }
+
+    // Check if any file content has changed
+    for (const [path, file] of Object.entries(currentFiles)) {
+      if (!savedFiles[path] || savedFiles[path].code !== file.code) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  if (!hasChanges()) {
+    return null;
+  }
 
   return (
     <Button onClick={handleSave} variant="outline">
@@ -98,7 +122,7 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
       >
         <div className="flex h-full flex-col gap-1">
           <menu className="flex items-center justify-end gap-2 border-b border-zinc-200 p-2 dark:border-zinc-800">
-            <SaveButton projectId={project._id} />
+            <SaveButton projectId={project._id} project={project} />
 
             <Popover>
               <PopoverTrigger asChild>
