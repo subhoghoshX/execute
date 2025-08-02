@@ -15,9 +15,14 @@ export default function HomePage() {
     async function eventHandler(e: KeyboardEvent) {
       if (e.key === "v") {
         setIsProjectCreating(true);
-        const projectId = await createProject();
+        const projectId = await createProject({ type: "classic" });
         setIsProjectCreating(false);
         navigate(`/${projectId}`);
+      } else if (e.key === "r") {
+        setIsProjectCreating(true);
+        const projectId = await createProject({ type: "sandpack" });
+        setIsProjectCreating(false);
+        navigate(`/${projectId}?mode=react`);
       }
     }
     window.addEventListener("keyup", eventHandler);
@@ -40,7 +45,7 @@ export default function HomePage() {
         disabled={isProjectCreating}
         onClick={async () => {
           setIsProjectCreating(true);
-          const projectId = await createProject();
+          const projectId = await createProject({ type: "classic" });
           setIsProjectCreating(false);
           navigate(`/${projectId}`);
         }}
@@ -48,10 +53,18 @@ export default function HomePage() {
         <JsIcon className="dark:fill-primary-foreground fill-[#F7DF1E]" />
         Vanilla Project<Kbd className="border-gray-700 dark:border-gray-400">V</Kbd>
       </Button>
-      <Button variant="secondary" disabled={isProjectCreating} className="relative">
+      <Button
+        variant="secondary"
+        disabled={isProjectCreating}
+        onClick={async () => {
+          setIsProjectCreating(true);
+          const projectId = await createProject({ type: "sandpack" });
+          setIsProjectCreating(false);
+          navigate(`/${projectId}?mode=react`);
+        }}
+      >
         <ReactIcon className="fill-[#61DAFB]" />
         React Project<Kbd>R</Kbd>
-        <p className="text-muted-foreground absolute left-[105%]">Coming soon..</p>
       </Button>
     </div>
   );

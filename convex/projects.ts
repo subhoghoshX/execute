@@ -21,9 +21,48 @@ const defaultHtmlCode = `<div class="h-screen flex justify-center items-center">
 `;
 
 export const create = mutation({
-  args: {},
-  async handler(ctx) {
-    const projectId = await ctx.db.insert("projects", { html: defaultHtmlCode, css: "", js: "" });
+  args: { type: v.optional(v.union(v.literal("classic"), v.literal("sandpack"))) },
+  async handler(ctx, args) {
+    const type = args.type || "classic";
+    const projectData =
+      type === "sandpack"
+        ? {
+            html: "",
+            css: "",
+            js: "",
+            type: "sandpack" as const,
+            files: {
+              "/App.js": {
+                code: `export default function App() {
+  return <h1>Hello world</h1>
+}`,
+              },
+              "/index.js": {
+                code: `import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);`,
+              },
+              "/public/index.html": {
+                code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React App</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>`,
+              },
+            },
+          }
+        : { html: defaultHtmlCode, css: "", js: "", type: "classic" as const };
+
+    const projectId = await ctx.db.insert("projects", projectData);
     return projectId;
   },
 });
@@ -36,12 +75,19 @@ export const get = query({
 });
 
 export const update = mutation({
-  args: { id: v.id("projects"), html: v.optional(v.string()), css: v.optional(v.string()), js: v.optional(v.string()) },
+  args: {
+    id: v.id("projects"),
+    html: v.optional(v.string()),
+    css: v.optional(v.string()),
+    js: v.optional(v.string()),
+    files: v.optional(v.record(v.string(), v.object({ code: v.string() }))),
+  },
   async handler(ctx, args) {
     return await ctx.db.patch(args.id, {
       ...(args.html !== undefined ? { html: args.html } : {}),
       ...(args.css !== undefined ? { css: args.css } : {}),
       ...(args.js !== undefined ? { js: args.js } : {}),
+      ...(args.files !== undefined ? { files: args.files } : {}),
     });
   },
 });

@@ -2,6 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 import ReactCodeMirror, { keymap } from "@uiw/react-codemirror";
 import { useEffect, useState } from "react";
 import { MonitorCog, Moon, Settings, Sun } from "lucide-react";
@@ -17,14 +18,18 @@ import { Toaster } from "@/components/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./components/ui/tooltip";
 import { expandAbbreviation } from "@emmetio/codemirror6-plugin";
 import { indentWithTab } from "@codemirror/commands";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { useDarkMode } from "./lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
+import SandpackEditor from "./SandpackEditor";
 
 export default function App() {
   const { projectId } = useParams();
+  const [searchParams] = useSearchParams();
+  const isReactMode = searchParams.get("mode") === "react";
+
   const project = useQuery(api.projects.get, projectId ? { id: projectId as Id<"projects"> } : "skip");
 
   if (project === undefined) {
@@ -32,11 +37,12 @@ export default function App() {
   } else if (project === null) {
     return <main className="flex h-screen items-center justify-center">The project doesn't exist.</main>;
   } else {
-    return <Editor project={project} />;
+    return isReactMode ? <SandpackEditor project={project} /> : <Editor project={project} />;
   }
 }
 
 export function Editor({ project }: { project: { _id: Id<"projects">; html: string; css: string; js: string } }) {
+  const navigate = useNavigate();
   const [htmlBuffer, setHtmlBuffer] = useState(project.html);
   const [cssBuffer, setCssBuffer] = useState(project.css);
   const [jsBuffer, setJsBuffer] = useState(project.js);
@@ -214,6 +220,16 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
                       Dark
                     </ToggleGroupItem>
                   </ToggleGroup>
+                  <div className="mt-3 pt-3 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => navigate(`/${project._id}?mode=react`)}
+                    >
+                      Switch to React Mode
+                    </Button>
+                  </div>
                 </PopoverContent>
               </Popover>
             </menu>
