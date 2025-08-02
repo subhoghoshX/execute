@@ -220,7 +220,7 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
                       Dark
                     </ToggleGroupItem>
                   </ToggleGroup>
-                  <div className="mt-3 pt-3 border-t">
+                  <div className="mt-3 border-t pt-3">
                     <Button
                       variant="outline"
                       size="sm"
