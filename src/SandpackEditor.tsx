@@ -21,6 +21,8 @@ import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
 import { useNavigate } from "react-router";
+import { reactAutocomplete, customCompletionKeymap } from "./lib/reactCompletions";
+import { completionKeymap } from "@codemirror/autocomplete";
 
 const defaultFiles = {
   "/App.js": {
@@ -202,6 +204,8 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
                   showLineNumbers
                   showInlineErrors
                   className="flex-1 overflow-hidden"
+                  extensions={[reactAutocomplete(), customCompletionKeymap]}
+                  extensionsKeymap={[...completionKeymap]}
                 />
               </ResizablePanel>
               <ResizableHandle className="bg-gray-300 outline-2 outline-gray-300 transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500 dark:bg-black dark:outline-black" />
