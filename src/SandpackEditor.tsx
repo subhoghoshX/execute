@@ -3,7 +3,6 @@ import {
   SandpackLayout,
   SandpackCodeEditor,
   SandpackPreview,
-  SandpackFileExplorer,
   FileTabs,
   useSandpack,
 } from "@codesandbox/sandpack-react";
@@ -17,6 +16,7 @@ import { Settings, Sun, Moon, MonitorCog } from "lucide-react";
 import { useDarkMode } from "./lib/utils";
 import { useEffect, useCallback } from "react";
 import { AddFileButton } from "./components/AddFileButton";
+import { CustomFileExplorer } from "./components/CustomFileExplorer";
 import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
@@ -183,13 +183,13 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
           <SandpackLayout className="flex-1">
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel defaultSize={10} minSize={10} className="flex h-full flex-col">
-                <div className="group flex items-center justify-between px-3.5 py-1.5 transition-colors">
+                <div className="group flex items-center justify-between bg-white px-3.5 py-1.5 transition-colors dark:bg-[#151515]">
                   <div className="flex items-center gap-1.5">Files</div>
                   <div className="opacity-0 transition-opacity group-hover:opacity-100">
                     <AddFileButton />
                   </div>
                 </div>
-                <SandpackFileExplorer className="flex-1" />
+                <CustomFileExplorer className="flex-1" />
               </ResizablePanel>
               <ResizableHandle className="bg-gray-300 outline-2 outline-gray-300 transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500 dark:bg-black dark:outline-black" />
               <ResizablePanel defaultSize={40} className="flex h-full flex-col">
