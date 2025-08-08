@@ -190,7 +190,12 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
                   <FileTabs className="[&_[role=tab]]:!outline-none" />
                   <ScrollBar orientation="horizontal" />
                 </ScrollArea>
-                <SandpackCodeEditor showTabs={false} showLineNumbers showInlineErrors className="flex-1" />
+                <SandpackCodeEditor
+                  showTabs={false}
+                  showLineNumbers
+                  showInlineErrors
+                  className="flex-1 overflow-hidden"
+                />
               </ResizablePanel>
               <ResizableHandle className="bg-gray-300 outline-2 outline-gray-300 transition-all duration-500 hover:bg-blue-500 hover:outline-blue-500 dark:bg-black dark:outline-black" />
               <ResizablePanel defaultSize={50}>
