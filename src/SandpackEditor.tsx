@@ -72,6 +72,19 @@ function SaveButton({ projectId, project }: SaveButtonProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleSave]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges()) {
+        e.preventDefault();
+        e.returnValue = "";
+        return "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  });
+
   // Check if there are changes by comparing current files with saved files
   const hasChanges = () => {
     const currentFiles = sandpack.files;

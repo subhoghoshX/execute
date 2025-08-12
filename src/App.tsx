@@ -107,6 +107,19 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
     });
   }, [activeTab, htmlBuffer, cssBuffer, jsBuffer, project._id, updateProject]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isHtmlDirty || isCssDirty || isJsDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+        return "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isHtmlDirty, isCssDirty, isJsDirty]);
+
   return (
     <main className="h-screen">
       <ResizablePanelGroup direction="horizontal">
