@@ -23,6 +23,7 @@ import type { Id } from "convex/_generated/dataModel";
 import { useNavigate } from "react-router";
 import { reactAutocomplete, customCompletionKeymap } from "./lib/reactCompletions";
 import { completionKeymap } from "@codemirror/autocomplete";
+import { useMemo } from "react";
 
 const defaultFiles = {
   "/App.js": {
@@ -116,6 +117,9 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
 
   const files = project.files || defaultFiles;
 
+  // Memoize extensions to prevent re-creation on theme changes
+  const editorExtensions = useMemo(() => [reactAutocomplete(), customCompletionKeymap], []);
+
   return (
     <main className="h-screen">
       <SandpackProvider
@@ -204,7 +208,7 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
                   showLineNumbers
                   showInlineErrors
                   className="flex-1 overflow-hidden"
-                  extensions={[reactAutocomplete(), customCompletionKeymap]}
+                  extensions={editorExtensions}
                   extensionsKeymap={[...completionKeymap]}
                 />
               </ResizablePanel>

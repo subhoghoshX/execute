@@ -275,7 +275,6 @@ function reactCompletions(context: CompletionContext): CompletionResult | null {
 export function reactAutocomplete() {
   return autocompletion({
     override: [reactCompletions],
-    defaultKeymap: true,
   });
 }
 
