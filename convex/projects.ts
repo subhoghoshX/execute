@@ -21,9 +21,14 @@ const defaultHtmlCode = `<div class="h-screen flex justify-center items-center">
 `;
 
 export const create = mutation({
-  args: { type: v.optional(v.union(v.literal("classic"), v.literal("sandpack"))) },
+  args: {
+    type: v.optional(v.union(v.literal("classic"), v.literal("sandpack"))),
+    isTailwindEnabled: v.optional(v.boolean()),
+  },
   async handler(ctx, args) {
     const type = args.type || "classic";
+    const isTailwindEnabled = args.isTailwindEnabled ?? true; // Default to true
+
     const projectData =
       type === "sandpack"
         ? {
@@ -31,6 +36,7 @@ export const create = mutation({
             css: "",
             js: "",
             type: "sandpack" as const,
+            isTailwindEnabled,
             files: {
               "/App.js": {
                 code: `export default function App() {
@@ -60,7 +66,7 @@ root.render(<App />);`,
               },
             },
           }
-        : { html: defaultHtmlCode, css: "", js: "", type: "classic" as const };
+        : { html: defaultHtmlCode, css: "", js: "", type: "classic" as const, isTailwindEnabled };
 
     const projectId = await ctx.db.insert("projects", projectData);
     return projectId;
@@ -81,6 +87,7 @@ export const update = mutation({
     css: v.optional(v.string()),
     js: v.optional(v.string()),
     files: v.optional(v.record(v.string(), v.object({ code: v.string() }))),
+    isTailwindEnabled: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
     return await ctx.db.patch(args.id, {
@@ -88,6 +95,7 @@ export const update = mutation({
       ...(args.css !== undefined ? { css: args.css } : {}),
       ...(args.js !== undefined ? { js: args.js } : {}),
       ...(args.files !== undefined ? { files: args.files } : {}),
+      ...(args.isTailwindEnabled !== undefined ? { isTailwindEnabled: args.isTailwindEnabled } : {}),
     });
   },
 });

@@ -41,7 +41,7 @@ export default function App() {
   }
 }
 
-export function Editor({ project }: { project: { _id: Id<"projects">; html: string; css: string; js: string } }) {
+export function Editor({ project }: { project: { _id: Id<"projects">; html: string; css: string; js: string; isTailwindEnabled?: boolean } }) {
   const navigate = useNavigate();
   const [htmlBuffer, setHtmlBuffer] = useState(project.html);
   const [cssBuffer, setCssBuffer] = useState(project.css);
@@ -63,8 +63,8 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
   });
 
   const [isTailwindEnabled, setIsTailwindEnabled] = useState(() => {
-    const value = window.localStorage.getItem("isTailwindEnabled");
-    return value === "true" || value === null ? true : false;
+    // Use project's saved preference, fallback to true if not set
+    return project.isTailwindEnabled ?? true;
   });
 
   const srcDoc = generateSourceDoc(htmlCode, cssCode, jsCode, isTailwindEnabled);
@@ -85,7 +85,7 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
     setHtmlCode(htmlBuffer);
     setCssCode(cssBuffer);
     setJsCode(jsBuffer);
-    updateProject({ id: project._id, html: htmlBuffer, css: cssBuffer, js: jsBuffer });
+    updateProject({ id: project._id, html: htmlBuffer, css: cssBuffer, js: jsBuffer, isTailwindEnabled });
   }
 
   useEffect(() => {
@@ -188,7 +188,8 @@ export function Editor({ project }: { project: { _id: Id<"projects">; html: stri
                       checked={isTailwindEnabled}
                       onCheckedChange={(isChecked) => {
                         setIsTailwindEnabled(isChecked);
-                        localStorage.setItem("isTailwindEnabled", isChecked.toString());
+                        // Save to database instead of localStorage
+                        updateProject({ id: project._id, isTailwindEnabled: isChecked });
                       }}
                     />
                     <Label htmlFor="tailwind">TailwindCSS</Label>

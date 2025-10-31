@@ -13,8 +13,9 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Settings, Sun, Moon, MonitorCog } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { useDarkMode } from "./lib/utils";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { AddFileButton } from "./components/AddFileButton";
 import { CustomFileExplorer } from "./components/CustomFileExplorer";
 import { useMutation } from "convex/react";
@@ -37,6 +38,7 @@ interface SandpackEditorProps {
   project: {
     _id: Id<"projects">;
     files?: Record<string, { code: string }>;
+    isTailwindEnabled?: boolean;
   };
 }
 
@@ -119,6 +121,12 @@ function SaveButton({ projectId, project }: SaveButtonProps) {
 export default function SandpackEditor({ project }: SandpackEditorProps) {
   const [isDark, setIsDark] = useDarkMode();
   const navigate = useNavigate();
+  const updateProject = useMutation(api.projects.update);
+
+  // Use project's saved preference, fallback to true if not set
+  const [isTailwindEnabled, setIsTailwindEnabled] = useState(() => {
+    return project.isTailwindEnabled ?? true;
+  });
 
   useEffect(() => {
     if (isDark) {
@@ -133,6 +141,11 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
   // Memoize extensions to prevent re-creation on theme changes
   const editorExtensions = useMemo(() => [reactAutocomplete(), customCompletionKeymap], []);
 
+  // Build external resources based on Tailwind toggle
+  const externalResources = useMemo(() => {
+    return isTailwindEnabled ? ["https://cdn.tailwindcss.com"] : [];
+  }, [isTailwindEnabled]);
+
   return (
     <main className="h-screen">
       <SandpackProvider
@@ -140,7 +153,7 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
         files={files}
         theme={isDark ? "dark" : "light"}
         options={{
-          externalResources: ["https://cdn.tailwindcss.com"],
+          externalResources,
         }}
         className="!h-full"
       >
@@ -155,6 +168,18 @@ export default function SandpackEditor({ project }: SandpackEditorProps) {
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="tailwind-react"
+                    checked={isTailwindEnabled}
+                    onCheckedChange={(isChecked) => {
+                      setIsTailwindEnabled(isChecked);
+                      // Save to database
+                      updateProject({ id: project._id, isTailwindEnabled: isChecked });
+                    }}
+                  />
+                  <Label htmlFor="tailwind-react">TailwindCSS</Label>
+                </div>
                 <Label>Theme</Label>
                 <ToggleGroup type="single" size="sm" defaultValue="system" className="justify-start" variant="outline">
                   <ToggleGroupItem

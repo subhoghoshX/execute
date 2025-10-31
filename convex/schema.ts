@@ -8,5 +8,6 @@ export default defineSchema({
     js: v.string(),
     files: v.optional(v.record(v.string(), v.object({ code: v.string() }))),
     type: v.optional(v.union(v.literal("classic"), v.literal("sandpack"))),
+    isTailwindEnabled: v.optional(v.boolean()),
   }),
 });
